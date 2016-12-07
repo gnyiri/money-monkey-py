@@ -3,4 +3,5 @@ pytest
 pytest-cov
 xmlrunner
 PyQt5==5.7
+pyqt5.qtsql
 sqlalchemy

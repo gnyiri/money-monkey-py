@@ -1,46 +1,6 @@
 import threading
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
+from PyQt5 import QtSql
 from util.mm_logger import MMLogger
-
-Base = declarative_base()
-
-
-class AccountType(Base):
-    __tablename__ = "account_type"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
-
-
-class Account(Base):
-    __tablename__ = "account"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
-    initial_balance = Column(Integer, nullable=False)
-    account_type_id = Column(Integer, ForeignKey('account_type.id'))
-    account_type = relationship(AccountType)
-
-
-class TransactionType(Base):
-    __tablename__ = "transaction_type"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
-
-
-class Transaction(Base):
-    __tablename__ = "transaction"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
-    date = Column(String(255), nullable=False)
-    value = Column(Integer, nullable=False)
-    transaction_type_id = Column(Integer, ForeignKey('transaction_type.id'))
-    transaction_type = relationship(TransactionType)
 
 
 class MMDatabase(object):
@@ -65,11 +25,35 @@ class MMDatabase(object):
 
     def __init__(self):
         self._logger = MMLogger.get_instance()
-        self._database_url = "sqlite:///database.db"
-        self._engine = create_engine(self._database_url)
+        self._logger.info("Open database")
+        self._database_url = "database.db"
+        self._database = QtSql.QSqlDatabase.addDatabase("QSQLITE")
+        self._database.setDatabaseName(self._database_url)
 
     def init_db(self):
-        Base.metadata.create_all(self._engine)
+        statements = list()
+        statements.append("""DROP TABLE account_type;""")
+        statements.append("""DROP TABLE `account`;""")
+        statements.append("""DROP TABLE `transaction`;""")
+        statements.append("""DROP TABLE `transaction_type`;""")
 
-    def insert_account_type(self, account_type_instance):
-        DB
+        statements.append("""CREATE TABLE account_type (id INTEGER, name TEXT, PRIMARY KEY(id));""")
+        statements.append("""CREATE TABLE `account` (`id` INTEGER, `name` TEXT, `initial_balance` INTEGER, `account_type_id` INTEGER, PRIMARY KEY(id));""")
+        statements.append("""CREATE TABLE `transaction_type` (`id` INTEGER, `name` TEXT, PRIMARY KEY(id));""")
+        statements.append("""CREATE TABLE `transaction` (`id` INTEGER, `name` TEXT, `date` TEXT, `transaction_type_id` INTEGER, PRIMARY KEY(id));""")
+
+        for statement in statements:
+            query = QtSql.QSqlQuery()
+            ok = query.exec_(statement)
+            if not ok:
+                self._logger.info("Database initialization failed!")
+                return
+
+        self._logger.info("Database creation done!")
+
+    def execute_sql(self, statement):
+        query = QtSql.QSqlQuery()
+        ok = query.exec_(statement)
+
+        if not ok:
+            self._logger.error("SQL statement %s failed!", statement)
