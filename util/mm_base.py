@@ -6,7 +6,6 @@ class MMBase(object):
     """
     Base class for all PM classes
     """
-
     def __init__(self):
         self._logger = MMLogger.get_instance()
         self._app = MMApp.get_instance()

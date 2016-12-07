@@ -20,9 +20,14 @@ class MMMainWindow(QMainWindow, MMBase):
         menu_bar = self.menuBar()
         action_menu = menu_bar.addMenu("&Actions")
 
+        init_db_action = QAction("Initialize Database", self)
+        init_db_action.triggered.connect(self.init_db)
+
         add_account_type_action = QAction("Add account type", self)
         add_account_type_action.setShortcut("Ctrl+A")
         add_account_type_action.triggered.connect(self.add_account_type)
+
+        action_menu.addAction(init_db_action)
         action_menu.addAction(add_account_type_action)
 
         self.toolbar = self.addToolBar("Exit")
@@ -36,6 +41,10 @@ class MMMainWindow(QMainWindow, MMBase):
         self.setCentralWidget(self.main_widget)
         self.show()
 
+    def init_db(self):
+        self.app.database.init_db()
+
     def add_account_type(self):
         dialog = MMAddNewAccountTypeDialog(self)
-        dialog.show()
+        if dialog.exec_() == MMAddNewAccountTypeDialog.Accepted:
+            pass

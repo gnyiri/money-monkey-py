@@ -3,6 +3,7 @@ import os
 from enum import Enum
 from PyQt5.Qt import QApplication, QSettings
 
+from db.mm_database import MMDatabase
 from .mm_logger import MMLogger
 
 
@@ -28,8 +29,17 @@ class MMApp(object):
 
     def __init__(self):
         self._logger = MMLogger.get_instance()
+        self._database = MMDatabase.get_instance()
         self._settings_file = os.path.join("./", "config.ini")
         self._logger.info("Settings file: %s", self._settings_file)
+
+    @property
+    def logger(self):
+        return self._logger
+
+    @property
+    def database(self):
+        return self._database
 
     def save_setting(self, name, value):
         self._logger.info("Save setting %s -> %s", name, str(value))
