@@ -46,7 +46,7 @@ class MMDatabase(object):
             query = QtSql.QSqlQuery()
             ok = query.exec_(statement)
             if not ok:
-                self._logger.info("Database initialization failed!")
+                self._logger.info("Database initialization failed! %s", self._database.lastError().text())
                 return
 
         self._logger.info("Database creation done!")

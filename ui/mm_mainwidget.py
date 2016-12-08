@@ -12,6 +12,7 @@ class MMMainWidget(QWidget):
         self.setMinimumSize(600, 400)
         layout = QVBoxLayout()
         self.tab_widget = QTabWidget(self)
+        self.tab_widget.setTabPosition(QTabWidget.West)
         self.tab_widget.addTab(MMAccountTypeWidget(self), "Account types")
         layout.addWidget(self.tab_widget)
         self.setLayout(layout)

@@ -13,8 +13,14 @@ class MMMainWindow(QMainWindow, MMBase):
         MMBase.__init__(self)
 
         self.setWindowTitle("Money Monkey - Financial Manager")
-
         self.progressbar = None
+        self.toolbar = None
+        self.status_bar = None
+        self.main_widget = None
+        self.build_ui()
+        self.show()
+
+    def build_ui(self):
         self.main_widget = MMMainWidget(self)
 
         menu_bar = self.menuBar()
@@ -39,7 +45,6 @@ class MMMainWindow(QMainWindow, MMBase):
         self.progressbar.hide()
         self.status_bar.addPermanentWidget(self.progressbar)
         self.setCentralWidget(self.main_widget)
-        self.show()
 
     def init_db(self):
         self.app.database.init_db()

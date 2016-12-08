@@ -7,6 +7,6 @@ class MMAccountTableModel(QtSql.QSqlTableModel):
         QtSql.QSqlTableModel.__init__(self, parent)
         self.setTable("account_type")
         self.setEditStrategy(QtSql.QSqlTableModel.OnRowChange)
-        self.setHeaderData(0, QtCore.Qt.Horizontal, "id")
-        self.setHeaderData(1, QtCore.Qt.Horizontal, "name")
+        self.setHeaderData(0, QtCore.Qt.Horizontal, "Id")
+        self.setHeaderData(1, QtCore.Qt.Horizontal, "Name")
         self.select()
